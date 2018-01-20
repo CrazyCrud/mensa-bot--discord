@@ -58,6 +58,6 @@ typings/
 .env
 
 #ide
-.idea/*
+.idea
 
 auth.json

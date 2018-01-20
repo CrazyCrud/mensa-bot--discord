@@ -53,12 +53,26 @@ bot.on('message', function (user, userID, channelID, message, evt) {
 					});
 					break;
 				}
+			case 'suche':
+				{
+					var _message2 = '';
+					(0, _server.findInMenu)(args[0], function (days) {
+						for (var i = 0; i < days.length; i++) {
+							_message2 += days[i].datum + " (" + days[i].tag + "): " + days[i].name + " \n";
+						}
+						bot.sendMessage({
+							to: channelID,
+							message: _message2
+						});
+					});
+					break;
+				}
 			case 'hilfe':
 				{
-					var _message2 = "\n\t\t\t\t\t\t!karte <tag>\n\t\t\t\t\t<tag> = montag, dienstag, mittwoch, donnerstag, freitag\n\t\t\t\t\t";
+					var _message3 = "\n\t\t\t\t\t\t!karte <tag>\n\t\t\t\t\t<tag> = montag, dienstag, mittwoch, donnerstag, freitag\n\t\t\t\t\t";
 					bot.sendMessage({
 						to: channelID,
-						message: _message2
+						message: _message3
 					});
 					break;
 				}

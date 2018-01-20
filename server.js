@@ -17,7 +17,7 @@ function getMenuOfThisWeek() {
 	var callback = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
 
 	var currentWeek = getCurrentWeek();
-	if (menus.hasOwnProperty(currentWeek)) {
+	if (menus.hasOwnProperty('' + currentWeek)) {
 		if (callback != null) {
 			callback(menus.currentWeek);
 		}
@@ -48,6 +48,25 @@ function getMenuOfDay(day, callback) {
 	});
 }
 
+function findInMenu(needle, callback) {
+	console.log("Search for: ", needle);
+	needle = needle.toLowerCase();
+	getMenuOfThisWeek(function (menuOfWeek) {
+		var daysOfMeal = menuOfWeek.filter(function (el) {
+			return el.hasOwnProperty('name') && el.name.toLowerCase().includes(needle);
+		}).map(function (el) {
+			console.log("Specific meal: ", el);
+			return {
+				datum: el.datum,
+				tag: el.tag,
+				name: el.name
+			};
+		});
+		console.log("All days of specific meal: ", daysOfMeal);
+		callback(daysOfMeal);
+	});
+}
+
 function downloadCSV(week, callback) {
 	var url = getUrl(week);
 	var pathToCSV = dir + '/' + week + '.csv';
@@ -70,3 +89,4 @@ function getCurrentWeek() {
 }
 
 exports.getMenuOfDay = getMenuOfDay;
+exports.findInMenu = findInMenu;

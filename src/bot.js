@@ -1,4 +1,4 @@
-import {getMenuOfDay} from './server';
+import {getMenuOfDay, findInMenu} from './server';
 
 const Discord = require("discord.io");
 const logger  = require("winston");
@@ -30,35 +30,48 @@ bot.on('message', function (user, userID, channelID, message, evt) {
 		args = args.splice(1);
 		switch (cmd) {
 			case 'schroeder': {
-					bot.sendMessage({
-						to     : channelID,
-						message: 'Ich erzähl ihnen jetzt mal was...'
-					});
-					break;
-				}
+				bot.sendMessage({
+					to     : channelID,
+					message: 'Ich erzähl ihnen jetzt mal was...'
+				});
+				break;
+			}
 			case 'karte': {
-					let message = '';
-					getMenuOfDay(args[0].substring(0, 2), (meals) => {
-						for (let i = 0; i < meals.length; i++) {
-							message += `${meals[i]}\n`;
-						}
-						bot.sendMessage({
-							to     : channelID,
-							message: message
-						});
-					});
-					break;
-				}
-			case 'hilfe': {
-					let message = `
-						!karte <tag>
-					<tag> = montag, dienstag, mittwoch, donnerstag, freitag
-					`;
+				let message = '';
+				getMenuOfDay(args[0].substring(0, 2), (meals) => {
+					for (let i = 0; i < meals.length; i++) {
+						message += `${meals[i]}\n`;
+					}
 					bot.sendMessage({
 						to     : channelID,
 						message: message
 					});
-					break;
+				});
+				break;
+			}
+			case 'suche': {
+				let message = '';
+				findInMenu(args[0], (days) => {
+					for (let i = 0; i < days.length; i++) {
+						message += `${days[i].datum} (${days[i].tag}): ${days[i].name} \n`;
+					}
+					bot.sendMessage({
+						to     : channelID,
+						message: message
+					});
+				});
+				break;
+			}
+			case 'hilfe': {
+				let message = `
+						!karte <tag>
+					<tag> = montag, dienstag, mittwoch, donnerstag, freitag
+					`;
+				bot.sendMessage({
+					to     : channelID,
+					message: message
+				});
+				break;
 			}
 		}
 	}

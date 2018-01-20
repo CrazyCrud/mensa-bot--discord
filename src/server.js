@@ -10,7 +10,7 @@ const dir   = './menues';
 
 function getMenuOfThisWeek(callback = null) {
 	const currentWeek = getCurrentWeek();
-	if (menus.hasOwnProperty(currentWeek)) {
+	if (menus.hasOwnProperty(`${currentWeek}`)) {
 		if (callback != null) {
 			callback(menus.currentWeek);
 		}
@@ -41,6 +41,25 @@ function getMenuOfDay(day, callback) {
 	});
 }
 
+function findInMenu(needle, callback) {
+	console.log("Search for: ", needle);
+	needle = needle.toLowerCase();
+	getMenuOfThisWeek((menuOfWeek) => {
+		const daysOfMeal = menuOfWeek.filter((el) => {
+			return el.hasOwnProperty('name') && (el.name.toLowerCase().includes(needle));
+		}).map((el) => {
+			console.log("Specific meal: ", el);
+			return {
+				datum: el.datum,
+				tag  : el.tag,
+				name : el.name
+			};
+		});
+		console.log("All days of specific meal: ", daysOfMeal);
+		callback(daysOfMeal);
+	});
+}
+
 function downloadCSV(week, callback) {
 	const url       = getUrl(week);
 	const pathToCSV = `${dir}/${week}.csv`;
@@ -62,4 +81,4 @@ function getCurrentWeek() {
 	return Math.ceil((((date - firstJanuary) / 86400000) + firstJanuary.getDay() + 1) / 7);
 }
 
-export { getMenuOfDay };
+export {getMenuOfDay, findInMenu};
