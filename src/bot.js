@@ -65,7 +65,8 @@ bot.on('message', function (user, userID, channelID, message, evt) {
 			case 'hilfe': {
 				let message = `
 						!karte <tag>
-					<tag> = montag, dienstag, mittwoch, donnerstag, freitag
+					<tag> = montag, dienstag, mittwoch, donnerstag, freitag (die ersten zwei Buchstaben reichen)
+					!suche <string>
 					`;
 				bot.sendMessage({
 					to     : channelID,

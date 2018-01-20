@@ -19,15 +19,15 @@ function getMenuOfThisWeek() {
 	var currentWeek = getCurrentWeek();
 	if (menus.hasOwnProperty('' + currentWeek)) {
 		if (callback != null) {
-			callback(menus.currentWeek);
+			callback(menus['' + currentWeek]);
 		}
 	} else {
 		downloadCSV(currentWeek, function (pathToCSV) {
 			fs.readFile(pathToCSV, 'utf8', function (err, data) {
-				menus.currentWeek = papaparse.parse(data, { header: true }).data;
+				menus['' + currentWeek] = papaparse.parse(data, { header: true }).data;
 				// console.log(menus.currentWeek);
 				if (callback != null) {
-					callback(menus.currentWeek);
+					callback(menus['' + currentWeek]);
 				}
 			});
 		});
