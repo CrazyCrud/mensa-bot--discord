@@ -59,3 +59,5 @@ typings/
 
 #ide
 .idea
+
+auth.json
