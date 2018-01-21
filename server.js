@@ -7,11 +7,18 @@ var console = require('console');
 var fs = require('fs');
 var request = require('request');
 var papaparse = require('papaparse');
+var iconv = require('iconv-lite');
 
 var menus = {};
 var dir = './menues';
 
-// getMenuOfDay('mo');
+createFolder();
+
+function createFolder() {
+	if (!fs.existsSync(dir)) {
+		fs.mkdirSync(dir);
+	}
+}
 
 function getMenuOfThisWeek() {
 	var callback = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
@@ -25,7 +32,6 @@ function getMenuOfThisWeek() {
 		downloadCSV(currentWeek, function (pathToCSV) {
 			fs.readFile(pathToCSV, 'utf8', function (err, data) {
 				menus['' + currentWeek] = papaparse.parse(data, { header: true }).data;
-				// console.log(menus.currentWeek);
 				if (callback != null) {
 					callback(menus['' + currentWeek]);
 				}
@@ -71,11 +77,15 @@ function downloadCSV(week, callback) {
 	var url = getUrl(week);
 	var pathToCSV = dir + '/' + week + '.csv';
 	var writeStream = fs.createWriteStream(pathToCSV);
+	writeStream.setDefaultEncoding('utf-8');
 	writeStream.on('close', function () {
 		console.log("File downloaded...");
 		callback(pathToCSV);
 	});
-	request.get(url).pipe(writeStream);
+	request.get({
+		uri: url,
+		encoding: 'binary'
+	}).pipe(iconv.decodeStream('latin1')).pipe(iconv.encodeStream('utf-8')).pipe(writeStream);
 }
 
 function getUrl(week) {
@@ -83,9 +93,10 @@ function getUrl(week) {
 }
 
 function getCurrentWeek() {
+	var dayInMS = 86400000;
 	var date = new Date();
 	var firstJanuary = new Date(date.getFullYear(), 0, 1);
-	return Math.ceil(((date - firstJanuary) / 86400000 + firstJanuary.getDay() + 1) / 7);
+	return Math.floor((date - firstJanuary) / dayInMS / 7) + 1;
 }
 
 exports.getMenuOfDay = getMenuOfDay;

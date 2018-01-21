@@ -29,7 +29,7 @@ bot.on('message', function (user, userID, channelID, message, evt) {
 
 		args = args.splice(1);
 		switch (cmd) {
-			case 'schroeder': {
+			case 'schröder': {
 				bot.sendMessage({
 					to     : channelID,
 					message: 'Ich erzähl ihnen jetzt mal was...'
@@ -63,11 +63,9 @@ bot.on('message', function (user, userID, channelID, message, evt) {
 				break;
 			}
 			case 'hilfe': {
-				let message = `
-						!karte <tag>
-					<tag> = montag, dienstag, mittwoch, donnerstag, freitag (die ersten zwei Buchstaben reichen)
-					!suche <string>
-					`;
+				let message = '!karte <tag>\n' +
+					'\t\t\t<tag> = montag, dienstag, mittwoch, donnerstag, freitag (die ersten zwei Buchstaben reichen)\n' +
+					'!suche <string>';
 				bot.sendMessage({
 					to     : channelID,
 					message: message
